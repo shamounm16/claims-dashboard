@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims Efficiency Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#15243b}
+header{background:linear-gradient(120deg,#102a43,#176b87);color:#fff;padding:26px 5%}
+header h1{margin:0;font-size:28px}header p{margin:7px 0 0;opacity:.82}
+main{padding:22px 5%}.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+select,button{padding:10px 13px;border:1px solid #d7e1eb;border-radius:8px;background:#fff}
+button{background:#176b87;color:#fff;cursor:pointer}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}
+.card,.panel{background:#fff;border-radius:12px;padding:17px;box-shadow:0 3px 15px #1a2b3c12}
+.label{font-size:11px;color:#6b7d8f;text-transform:uppercase}.value{font-size:24px;font-weight:700;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.panel h3{margin-top:0}
+.barrow{margin:12px 0;cursor:pointer}.barlabel{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.barbg{height:13px;background:#edf2f7;border-radius:8px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#176b87,#38a3a5);border-radius:8px}
+.trend{display:flex;align-items:flex-end;gap:9px;height:190px;border-bottom:1px solid #dce5ee}.month{flex:1;text-align:center;font-size:10px}
+.col{height:150px;display:flex;align-items:flex-end;justify-content:center;gap:3px}.billbar,.impactbar{width:11px;border-radius:4px 4px 0 0}
+.billbar{background:#a8c5da}.impactbar{background:#176b87}.tablepanel{margin-top:16px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}th{background:#102a43;color:#fff;text-align:left;padding:10px}td{padding:9px;border-bottom:1px solid #e7edf3}
+.pill{padding:4px 8px;background:#e5f4f3;border-radius:10px;color:#176b87;font-weight:bold}
+footer{text-align:center;color:#8090a0;font-size:12px;padding:25px}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}header h1{font-size:23px}}
+</style>
+</head>
+<body>
+<header><h1>Claims Efficiency Dashboard</h1><p>Interactive demo • Actual Avoidable Impact Analytics</p></header>
+<main>
+<div class="filters">
+<select id="provider"><option value="">All Providers</option></select>
+<select id="customer"><option value="">All Customers</option></select>
+<select id="service"><option value="">All Main Services</option></select>
+<select id="gender"><option value="">All Genders</option><option>Male</option><option>Female</option></select>
+<button onclick="resetFilters()">Reset Filters</button>
+</div>
+<div class="kpis">
+<div class="card"><div class="label">Presented NET Bill</div><div class="value" id="bill"></div></div>
+<div class="card"><div class="label">Actual Avoidable Impact</div><div class="value" id="impact"></div></div>
+<div class="card"><div class="label">Impact %</div><div class="value" id="pct"></div></div>
+<div class="card"><div class="label">Impacted Members</div><div class="value" id="members"></div></div>
+<div class="card"><div class="label">Impacted Episodes</div><div class="value" id="episodes"></div></div>
+</div>
+<div class="grid">
+<div class="panel"><h3>Avoidable Impact by Main Service</h3><div id="serviceBars"></div></div>
+<div class="panel"><h3>Avoidable Impact by Provider</h3><div id="providerBars"></div></div>
+</div>
+<div class="panel" style="margin-top:16px"><h3>Monthly Trend</h3><div class="trend" id="trend"></div><div style="font-size:11px;color:#718096;margin-top:10px">Light = Presented NET Bill • Dark = Avoidable Impact</div></div>
+<div class="panel tablepanel"><h3>Impacted Claims Detail</h3><table><thead><tr><th>Claim</th><th>Member</th><th>Provider</th><th>Customer</th><th>Gender</th><th>Main Service</th><th>Presented Bill</th><th>Avoidable Impact</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<footer>Demo with synthetic data only — no real member or claims information.</footer>
+<script>
+const providers=['IMC','My Clinic','Magrabi','Saudi German','Fakeeh'];
+const customers=['Alpha Corp','Beta Group','Gamma Co','Delta Holdings'];
+const services=['Consultation','CBC','HbA1c','MRI','Physiotherapy'];
+let seed=91;
+function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+const data=[];
+for(let i=1;i<=150;i++){
+ let b=[120,180,250,350,500,850,1200][Math.floor(rnd()*7)];
+ let f=[0,0,.25,.5,1][Math.floor(rnd()*5)];
+ data.push({claim:'CLM-'+String(i).padStart(4,'0'),member:'M-'+String(1000+Math.floor(rnd()*55)),
+ episode:'EP-'+String(2000+Math.floor(rnd()*90)),provider:providers[Math.floor(rnd()*providers.length)],
+ customer:customers[Math.floor(rnd()*customers.length)],service:services[Math.floor(rnd()*services.length)],
+ gender:rnd()>.5?'Male':'Female',month:1+Math.floor(rnd()*8),bill:b,impact:Math.round(b*f)});
+}
+function fill(id,a){let e=document.getElementById(id);a.forEach(x=>e.innerHTML+=`<option>${x}</option>`)}
+fill('provider',providers);fill('customer',customers);fill('service',services);
+['provider','customer','service','gender'].forEach(id=>document.getElementById(id).onchange=render);
+const sar=n=>'SAR '+Math.round(n).toLocaleString();
+function filtered(){
+ let p=provider.value,c=customer.value,s=service.value,g=gender.value;
+ return data.filter(x=>(!p||x.provider==p)&&(!c||x.customer==c)&&(!s||x.service==s)&&(!g||x.gender==g));
+}
+function agg(d,k){let o={};d.filter(x=>x.impact>0).forEach(x=>o[x[k]]=(o[x[k]]||0)+x.impact);return Object.entries(o).sort((a,b)=>b[1]-a[1])}
+function bars(id,items,key){
+ let e=document.getElementById(id),mx=Math.max(...items.map(x=>x[1]),1);
+ e.innerHTML=items.map(([n,v])=>`<div class="barrow" onclick="setFilter('${key}','${n}')"><div class="barlabel"><span>${n}</span><b>${sar(v)}</b></div><div class="barbg"><div class="bar" style="width:${v/mx*100}%"></div></div></div>`).join('');
+}
+function setFilter(k,v){document.getElementById(k).value=v;render()}
+function resetFilters(){provider.value='';customer.value='';service.value='';gender.value='';render()}
+function render(){
+ let d=filtered(),imp=d.filter(x=>x.impact>0),b=d.reduce((a,x)=>a+x.bill,0),im=d.reduce((a,x)=>a+x.impact,0);
+ bill.textContent=sar(b);impact.textContent=sar(im);pct.textContent=b?(im/b*100).toFixed(1)+'%':'0%';
+ members.textContent=new Set(imp.map(x=>x.member)).size;episodes.textContent=new Set(imp.map(x=>x.episode)).size;
+ bars('serviceBars',agg(d,'service'),'service');bars('providerBars',agg(d,'provider'),'provider');
+ let months=Array.from({length:8},(_,i)=>{let z=d.filter(x=>x.month==i+1);return[z.reduce((a,x)=>a+x.bill,0),z.reduce((a,x)=>a+x.impact,0)]});
+ let mx=Math.max(...months.flat(),1);
+ trend.innerHTML=months.map((x,i)=>`<div class="month"><div class="col"><div class="billbar" style="height:${x[0]/mx*145}px"></div><div class="impactbar" style="height:${x[1]/mx*145}px"></div></div>${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'][i]}</div>`).join('');
+ rows.innerHTML=imp.sort((a,b)=>b.impact-a.impact).slice(0,15).map(x=>`<tr><td>${x.claim}</td><td>${x.member}</td><td>${x.provider}</td><td>${x.customer}</td><td>${x.gender}</td><td><span class="pill">${x.service}</span></td><td>${sar(x.bill)}</td><td><b>${sar(x.impact)}</b></td></tr>`).join('');
+}
+render();
+</script>
+</body></html>
