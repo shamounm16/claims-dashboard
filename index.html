@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claims Efficiency | Executive Overview</title>
+<style>
+:root{--navy:#10233f;--blue:#2f80ed;--blue2:#66a6f2;--bg:#f4f7fb;--line:#dfe7f1;--muted:#6d7e93;--red:#cf3d4c;--green:#1d9b72}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#13233c}
+.app{display:grid;grid-template-columns:72px 1fr;min-height:100vh}.rail{background:var(--navy);color:#fff;padding:18px 10px;position:sticky;top:0;height:100vh}
+.brand{font-weight:800;text-align:center;font-size:18px;margin-bottom:26px}.nav{display:grid;gap:11px}.nav button{border:0;background:transparent;color:#c8d5e6;border-radius:8px;padding:10px 4px;font-size:10px;cursor:pointer}.nav button.active,.nav button:hover{background:#ffffff18;color:#fff}.ico{font-size:20px;display:block;margin-bottom:4px}
+main{padding:18px 2% 28px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.top h1{font-size:23px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.refresh{text-align:right;font-size:11px;color:var(--muted)}
+.box{background:#fff;border:1px solid var(--line);border-radius:9px;box-shadow:0 2px 7px #19334f08}
+.filters{padding:12px;display:grid;grid-template-columns:repeat(5,1fr) 140px;gap:10px}.f label{display:block;font-size:10px;font-weight:700;color:#465875;margin-bottom:4px}.f select{width:100%;height:35px;border:1px solid #ced9e6;border-radius:5px;background:#fff;padding:0 8px}.reset{height:35px;align-self:end;border:0;border-radius:5px;background:var(--blue);color:#fff;font-weight:650}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-top:12px}.kpi{padding:14px 15px;position:relative;overflow:hidden}.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#b9c8da}.kpi.focus:before{background:var(--red)}.kpi .lab{font-size:11px;color:#596b83}.kpi .val{font-size:23px;font-weight:760;margin-top:7px}.kpi .note{font-size:10px;color:#8190a3;margin-top:3px}
+.row1{display:grid;grid-template-columns:1.25fr .9fr;gap:12px;margin-top:12px}.row2{display:grid;grid-template-columns:.85fr 1.3fr;gap:12px;margin-top:12px}.panel{padding:15px;min-height:300px}.panel h3{font-size:15px;margin:0 0 14px}.barrow{margin:11px 0;cursor:pointer}.barlab{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}.track{height:17px;background:#edf3f9;border-radius:2px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--blue2),var(--blue))}
+.trend{height:225px;border-left:1px solid #ccd8e5;border-bottom:1px solid #ccd8e5;display:flex;align-items:flex-end;padding:8px;gap:8px}.month{flex:1;text-align:center;font-size:9px;color:#75869b}.cols{height:190px;display:flex;align-items:flex-end;justify-content:center;gap:3px}.billcol,.impactcol{width:10px;border-radius:3px 3px 0 0}.billcol{background:#c5d8ed}.impactcol{background:var(--red)}
+.heat{display:grid;grid-template-columns:105px repeat(5,1fr);font-size:10px}.hc{padding:9px 5px;border-right:1px solid #fff;border-bottom:1px solid #fff;text-align:center}.hh{font-weight:700;background:#edf3f9}.heatval{color:#10233f;cursor:pointer}
+.providerrow{display:grid;grid-template-columns:100px 1fr 72px;align-items:center;gap:8px;margin:13px 0;font-size:11px}.pbarbg{height:14px;background:#edf3f9}.pbar{height:100%;background:#4e94e8}
+.tablebox{margin-top:12px;padding:15px;overflow:auto}.tabletop{display:flex;justify-content:space-between;gap:10px;align-items:center}.search{border:1px solid #ced9e6;border-radius:5px;padding:8px;width:220px}table{width:100%;border-collapse:collapse;font-size:11px;margin-top:12px}th{background:#edf3f9;text-align:left;padding:8px;white-space:nowrap}td{padding:8px;border-bottom:1px solid #e7edf4;white-space:nowrap}.num{text-align:right}.red{color:var(--red);font-weight:700}
+.mobileFilter{display:none}.legend{font-size:10px;color:var(--muted);margin-top:7px}footer{display:flex;justify-content:space-between;font-size:10px;color:#7a8a9e;padding:14px 2px}
+@media(max-width:850px){.app{grid-template-columns:1fr}.rail{display:none}main{padding:10px}.top h1{font-size:19px}.refresh{display:none}.mobileFilter{display:block;border:0;background:var(--navy);color:#fff;padding:9px 13px;border-radius:5px;margin-bottom:9px}.filters{display:none;grid-template-columns:1fr 1fr}.filters.open{display:grid}.kpis{grid-template-columns:1fr 1fr}.row1,.row2{grid-template-columns:1fr}.panel{min-height:270px}.heat{grid-template-columns:90px repeat(5,90px);overflow:auto}.tabletop{align-items:flex-start;flex-direction:column}.search{width:100%}}
+@media(max-width:430px){.kpi .val{font-size:20px}.kpi{padding:12px}.filters.open{grid-template-columns:1fr}.top{margin-bottom:9px}}
+</style></head>
+<body><div class="app">
+<aside class="rail"><div class="brand">CE</div><div class="nav">
+<button class="active"><span class="ico">⌂</span>Overview</button><button><span class="ico">▥</span>Provider</button><button><span class="ico">◎</span>Customer</button><button><span class="ico">≡</span>Service</button><button><span class="ico">⌕</span>Detail</button>
+</div></aside>
+<main>
+<div class="top"><div><h1>Claims Efficiency | Executive Overview</h1><div class="sub">Actual avoidable impact • Opportunity concentration • Performance monitoring</div></div><div class="refresh">Reporting period: Jan–Aug 2026<br>Demo dataset</div></div>
+<button class="mobileFilter" onclick="document.querySelector('.filters').classList.toggle('open')">☰ Filters</button>
+<section class="filters box">
+<div class="f"><label>DATE FROM</label><select><option>Jan 2026</option></select></div><div class="f"><label>DATE TO</label><select><option>Aug 2026</option></select></div>
+<div class="f"><label>CUSTOMER</label><select id="customer"><option value="">All Customers</option></select></div>
+<div class="f"><label>PROVIDER</label><select id="provider"><option value="">All Providers</option></select></div>
+<div class="f"><label>MAIN SERVICE</label><select id="service"><option value="">All Services</option></select></div><button class="reset" onclick="resetF()">Reset Filters</button>
+</section>
+<section class="kpis">
+<div class="kpi box focus"><div class="lab">Actual Avoidable Impact</div><div class="val" id="impact"></div><div class="note">SAR opportunity</div></div>
+<div class="kpi box"><div class="lab">Impact %</div><div class="val" id="pct"></div><div class="note">of presented net bill</div></div>
+<div class="kpi box"><div class="lab">Presented NET Bill</div><div class="val" id="bill"></div><div class="note">SAR</div></div>
+<div class="kpi box"><div class="lab">Impacted Members</div><div class="val" id="members"></div><div class="note">distinct members</div></div>
+<div class="kpi box"><div class="lab">Impacted Episodes</div><div class="val" id="episodes"></div><div class="note">distinct episodes</div></div>
+</section>
+<section class="row1">
+<div class="panel box"><h3>Main Services | Avoidable Impact</h3><div id="serviceBars"></div></div>
+<div class="panel box"><h3>Monthly Avoidable Impact Trend</h3><div class="trend" id="trend"></div><div class="legend">Light blue = Presented bill &nbsp; • &nbsp; Red = Actual avoidable impact</div></div>
+</section>
+<section class="row2">
+<div class="panel box"><h3>Top Providers | Avoidable Impact</h3><div id="providers"></div></div>
+<div class="panel box"><h3>Customer × Main Service | Opportunity Heatmap</h3><div style="overflow:auto"><div class="heat" id="heat"></div></div><div class="legend">Darker cells indicate greater avoidable impact.</div></div>
+</section>
+<section class="tablebox box"><div class="tabletop"><h3 style="margin:0">Impact Detail</h3><input id="search" class="search" placeholder="Search provider, customer or service..." oninput="renderTable()"></div>
+<table><thead><tr><th>Provider</th><th>Customer</th><th>Main Service</th><th>Episodes</th><th>Members</th><th class="num">Presented Bill</th><th class="num">Avoidable Impact</th><th class="num">Impact %</th></tr></thead><tbody id="rows"></tbody></table>
+</section><footer><span>Claims Efficiency Analytics</span><span>Synthetic demonstration data only</span></footer>
+</main></div>
+<script>
+const P=['IMC','My Clinic','Magrabi','Saudi German','Fakeeh'],C=['SABIC','STC','NEOM','LUX','Others'],S=['Laboratory','Radiology','Consultation','Medication','Physiotherapy','Others'];let seed=321;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+let D=[];for(let i=0;i<520;i++){let b=[180,250,350,500,850,1200,1800,2500][Math.floor(rnd()*8)],f=[0,0,.08,.12,.2,.3,.5][Math.floor(rnd()*7)];D.push({m:'M'+(1000+Math.floor(rnd()*190)),e:'EP'+(2000+Math.floor(rnd()*390)),p:P[Math.floor(rnd()*P.length)],c:C[Math.floor(rnd()*C.length)],s:S[Math.floor(rnd()*S.length)],mo:1+Math.floor(rnd()*8),b:b,i:Math.round(b*f)})}
+function fill(id,a){let e=document.getElementById(id);a.forEach(x=>e.innerHTML+=`<option>${x}</option>`)}fill('provider',P);fill('customer',C);fill('service',S);['provider','customer','service'].forEach(id=>document.getElementById(id).onchange=render);
+const fmt=n=>Math.round(n).toLocaleString();function fd(){let p=provider.value,c=customer.value,s=service.value;return D.filter(x=>(!p||x.p==p)&&(!c||x.c==c)&&(!s||x.s==s))}
+function grp(d,k,v='i'){let o={};d.forEach(x=>o[x[k]]=(o[x[k]]||0)+x[v]);return Object.entries(o).sort((a,b)=>b[1]-a[1])}
+function resetF(){provider.value='';customer.value='';service.value='';search.value='';render()}function sf(v){service.value=v;render()}function pf(v){provider.value=v;render()}
+function render(){
+ let d=fd(),imp=d.filter(x=>x.i>0),b=d.reduce((a,x)=>a+x.b,0),iv=d.reduce((a,x)=>a+x.i,0);impact.textContent=fmt(iv);pct.textContent=b?(iv/b*100).toFixed(1)+'%':'0%';bill.textContent=fmt(b);members.textContent=fmt(new Set(imp.map(x=>x.m)).size);episodes.textContent=fmt(new Set(imp.map(x=>x.e)).size);
+ let ss=grp(imp,'s'),mx=Math.max(...ss.map(x=>x[1]),1);serviceBars.innerHTML=ss.map(([n,v])=>`<div class="barrow" onclick="sf('${n}')"><div class="barlab"><span>${n}</span><b>SAR ${fmt(v)}</b></div><div class="track"><div class="bar" style="width:${v/mx*100}%"></div></div></div>`).join('');
+ let ms=Array.from({length:8},(_,j)=>{let z=d.filter(x=>x.mo==j+1);return[z.reduce((a,x)=>a+x.b,0),z.reduce((a,x)=>a+x.i,0)]}),mm=Math.max(...ms.flat(),1);trend.innerHTML=ms.map((x,j)=>`<div class="month"><div class="cols"><div class="billcol" style="height:${x[0]/mm*185}px"></div><div class="impactcol" style="height:${x[1]/mm*185}px"></div></div>${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'][j]}</div>`).join('');
+ let pp=grp(imp,'p'),pm=Math.max(...pp.map(x=>x[1]),1);providers.innerHTML=pp.map(([n,v])=>`<div class="providerrow" onclick="pf('${n}')"><span>${n}</span><div class="pbarbg"><div class="pbar" style="width:${v/pm*100}%"></div></div><b>${fmt(v)}</b></div>`).join('');
+ let hv={};C.forEach(c=>S.slice(0,5).forEach(s=>hv[c+'|'+s]=imp.filter(x=>x.c==c&&x.s==s).reduce((a,x)=>a+x.i,0)));let hm=Math.max(...Object.values(hv),1),h='<div class="hc hh">Customer</div>'+S.slice(0,5).map(s=>`<div class="hc hh">${s}</div>`).join('');C.forEach(c=>{h+=`<div class="hc hh">${c}</div>`;S.slice(0,5).forEach(s=>{let v=hv[c+'|'+s],a=.08+.72*(v/hm);h+=`<div class="hc heatval" style="background:rgba(47,128,237,${a})" title="SAR ${fmt(v)}">${fmt(v)}</div>`})});heat.innerHTML=h;renderTable();
+}
+function renderTable(){let d=fd(),q=(search.value||'').toLowerCase(),groups={};d.filter(x=>x.i>0&&(x.p+' '+x.c+' '+x.s).toLowerCase().includes(q)).forEach(x=>{let k=x.p+'|'+x.c+'|'+x.s;if(!groups[k])groups[k]={p:x.p,c:x.c,s:x.s,b:0,i:0,e:new Set(),m:new Set()};let g=groups[k];g.b+=x.b;g.i+=x.i;g.e.add(x.e);g.m.add(x.m)});rows.innerHTML=Object.values(groups).sort((a,b)=>b.i-a.i).slice(0,30).map(g=>`<tr><td>${g.p}</td><td>${g.c}</td><td>${g.s}</td><td>${g.e.size}</td><td>${g.m.size}</td><td class="num">${fmt(g.b)}</td><td class="num red">${fmt(g.i)}</td><td class="num">${(g.i/g.b*100).toFixed(1)}%</td></tr>`).join('')}
+render();
+</script></body></html>
